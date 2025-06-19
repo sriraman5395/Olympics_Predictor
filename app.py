@@ -4,19 +4,24 @@ import numpy as np
 import gdown
 import os
 
-# === Download model from Google Drive if not exists ===
-model_file = "model.pkl"
-model_file_id = "1c1YRNoqJgXxlIfjkPfy5dqenJHk6Sllq"  # 🔁 Replace with actual ID
-
-if not os.path.exists(model_file):
-    gdown.download(f"https://drive.google.com/uc?id={model_file_id}", model_file, quiet=False)
-
-# === Load model and encoders ===
-model = joblib.load("model.pkl")
-encoders = joblib.load("label_encoders.pkl")  # Safe to keep in repo
-
 # === Page Config ===
 st.set_page_config(page_title="Olympics Medal Region Predictor", layout="centered")
+
+# === Cache and Load Model + Encoders ===
+@st.cache_resource
+def load_model_and_encoders():
+    model_file = "model.pkl"
+    model_file_id = "1c1YRNoqJgXxlIfjkPfy5dqenJHk6Sllq"  # Google Drive ID
+
+    if not os.path.exists(model_file):
+        gdown.download(f"https://drive.google.com/uc?id={model_file_id}", model_file, quiet=False)
+
+    model = joblib.load("model.pkl")
+    encoders = joblib.load("label_encoders.pkl")  # Must be in your repo
+    return model, encoders
+
+# === Load once using cache ===
+model, encoders = load_model_and_encoders()
 
 # === Optional: Blue button style ===
 st.markdown("""
