@@ -33,25 +33,21 @@ y = df["region"]
 label_counts = y.value_counts()
 valid_labels = label_counts[label_counts >= 2].index
 mask = y.isin(valid_labels)
-X = X[mask]
+X = X[mask].astype("float32")  # 👈 Convert to float32
 y = y[mask]
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.2, random_state=42)
 
-# Train model
-from sklearn.ensemble import RandomForestClassifier
-import joblib
-
-# Train the model
-model = RandomForestClassifier()
+# Train a smaller model
+model = RandomForestClassifier(n_estimators=50, max_depth=10, random_state=42)
 model.fit(X_train, y_train)
 
-# ✅ Save the model safely
+# Save compressed model
 with open("model.pkl", "wb") as f:
-    joblib.dump(model, f)
+    joblib.dump(model, f, compress=3)
 
-# ✅ Save the encoders safely
+# Save the encoders
 with open("label_encoders.pkl", "wb") as f:
     joblib.dump({
         "sport": le_sport,
@@ -60,4 +56,4 @@ with open("label_encoders.pkl", "wb") as f:
         "medal": le_medal
     }, f)
 
-print("✅ Model trained and saved as model.pkl")
+print("✅ Model trained and saved as compressed model.pkl")
