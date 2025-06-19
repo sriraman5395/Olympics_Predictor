@@ -4,21 +4,21 @@ import numpy as np
 import gdown
 import os
 
-# === Google Drive Model Download ===
+# === Download model from Google Drive if not exists ===
 model_file = "model.pkl"
-model_file_id = "1c1YRNoqJgXxlIfjkPfy5dqenJHk6Sllq"  # 🔁 Replace with your real file ID
+model_file_id = "1c1YRNoqJgXxlIfjkPfy5dqenJHk6Sllq"  # 🔁 Replace with actual ID
 
 if not os.path.exists(model_file):
     gdown.download(f"https://drive.google.com/uc?id={model_file_id}", model_file, quiet=False)
 
-# === Load Model and Encoders ===
+# === Load model and encoders ===
 model = joblib.load("model.pkl")
-encoders = joblib.load("label_encoders.pkl")  # small file, committed to repo
+encoders = joblib.load("label_encoders.pkl")  # Safe to keep in repo
 
 # === Page Config ===
 st.set_page_config(page_title="Olympics Medal Region Predictor", layout="centered")
 
-# === Blue Button Styling ===
+# === Optional: Blue button style ===
 st.markdown("""
     <style>
         .stButton > button {
@@ -50,7 +50,6 @@ with st.form("predict_form"):
     medal = st.selectbox("🥇 Medal", encoders["medal"].classes_)
     submit = st.form_submit_button("🔍 Predict Region")
 
-# === Prediction Logic ===
 if submit:
     try:
         sport_encoded = encoders["sport"].transform([sport])[0]
@@ -64,6 +63,3 @@ if submit:
         st.success(f"🌍 Predicted Region: **{region_pred}**")
     except Exception as e:
         st.error(f"❌ Prediction failed: {e}")
-
-
-
