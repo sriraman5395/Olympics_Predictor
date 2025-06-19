@@ -67,4 +67,3 @@ if submit:
 
 
 
-https://drive.google.com/file/d/1c1YRNoqJgXxlIfjkPfy5dqenJHk6Sllq/view?usp=sharing
