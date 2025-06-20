@@ -2,9 +2,12 @@ import streamlit as st
 import joblib
 import numpy as np
 import os
-
+import base64
 
 st.set_page_config(page_title="Olympics Medal Region Predictor", layout="centered")
+
+
+
 
 
 @st.cache_resource
@@ -20,8 +23,10 @@ model, encoders = load_model_and_encoders()
 
 
 
+
+
 st.title("Olympics Medal Region Predictor")
-st.write("Use athlete information to predict which region is most likely to win a medal.")
+st.write("Use athlete information to predict which region is most likely to win a medal in 2028.")
 
 with st.form("predict_form"):
     st.subheader("Input Athlete Details")
